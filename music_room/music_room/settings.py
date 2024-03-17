@@ -37,8 +37,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'api.apps.ApiConfig', # Přidali jsme API aplikaci do hlavní applikace
+    'api.apps.ApiConfig', # Přidali jsme API aplikaci do hlavní aplikace
     'rest_framework', # Přidali jsme REST framework
+    'frontend.apps.FrontendConfig', # Přidali jsme frontend aplikaci do hlavní aplikace
 ]
 
 MIDDLEWARE = [

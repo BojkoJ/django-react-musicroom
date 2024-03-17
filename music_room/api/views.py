@@ -5,7 +5,7 @@ from .models import Room
 
 # Create your views here.
 
-class RoomView(generics.CreateAPIView):
+class RoomView(generics.ListAPIView):
     # Toto view bude sloužit k vytvoření nové místnosti
     queryset = Room.objects.all() # Vrací všechny místnosti
     serializer_class = RoomSerializer # Použije RoomSerializer

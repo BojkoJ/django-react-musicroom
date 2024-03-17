@@ -1,2 +1,7 @@
 /.idea
 /.vscode
+
+/music_room/frontend/node_modules
+/music_room/frontend/__pycache__/*
+/music_room/api/__pycache__/*
+/music_room/music_room/__pycache__/*
