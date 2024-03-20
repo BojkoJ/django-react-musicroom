@@ -39,6 +39,35 @@ class GetRoom(APIView):
 
         return Response({'Bad Request' : 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
 
+class JoinRoom(APIView):
+    lookup_url_kwarg = 'code'
+
+
+    def post(self, request, format=None):
+        if not self.request.session.exists(self.request.session.session_key):
+            # Pokud session neexistuje, vytvoříme novou
+            self.request.session.create()
+        
+        # získáme code z requestu
+        code = request.data.get(self.lookup_url_kwarg)
+
+        if code != None:
+            room_result = Room.objects.filter(code=code)
+
+            if len(room_result) > 0:
+                room = room_result[0]
+
+                # Toto nám řekne: "tento uživatel v jeho aktuální session je v této místnosti"
+
+                # Co děláme je, že vytváříme dočasný storage object
+                # který se jmenuje room_code a rovná se proměnné code
+                # a uloží se do session usera
+                self.request.session['room_code'] = code
+                return Response({'message' : 'Room Joined!'}, status=status.HTTP_200_OK)
+            
+            return Response({'Bad Request' : 'Invalid Room Code'}, status=status.HTTP_400_BAD_REQUEST)
+    
+        return Response({'Bad Request' : 'Invalid post data, did not find a code key'}, status=status.HTTP_400_BAD_REQUEST)
 
 
 class CreateRoomView(APIView):
@@ -66,9 +95,12 @@ class CreateRoomView(APIView):
                 room = queryset[0]
                 room.guest_can_pause = guest_can_pause
                 room.votes_to_skip = votes_to_skip
+                self.request.session['room_code'] = room.code
                 room.save(update_fields=['guest_can_pause', 'votes_to_skip'])
             else:
                 room = Room(host=host, guest_can_pause=guest_can_pause, votes_to_skip=votes_to_skip)
+                self.request.session['room_code'] = room.code
                 room.save()
             
             return Response(RoomSerializer(room).data,status=status.HTTP_201_CREATED)
+        

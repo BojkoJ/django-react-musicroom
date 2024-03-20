@@ -46,18 +46,7 @@ const CreateRoomPage = () => {
     };
 
     return (
-        <Grid
-            container
-            spacing={1}
-            alignItems='center'
-            style={{
-                height: "50vh",
-                position: "absolute",
-                top: "50%",
-                left: "50%",
-                transform: "translate(-50%, -50%)",
-            }}
-        >
+        <Grid container spacing={1} alignItems='center'>
             <Grid item xs={12} align='center'>
                 <Typography component='h4' variant='h4'>
                     Create a Room
