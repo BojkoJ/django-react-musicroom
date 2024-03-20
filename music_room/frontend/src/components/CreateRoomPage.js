@@ -10,7 +10,7 @@ import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-const RoomJoinPage = () => {
+const CreateRoomPage = () => {
     const defaultVotes = 2;
 
     const [votesToSkip, setVotesToSkip] = useState(defaultVotes);
@@ -35,9 +35,11 @@ const RoomJoinPage = () => {
         };
 
         try {
-            const response = await fetch("/api/create-room", requestOptions);
-            const data = await response.json();
-            console.log(data);
+            fetch(`/api/create-room`, requestOptions)
+                .then((res) => res.json())
+                .then((data) => {
+                    window.location.href = `/room/${data.code}`;
+                });
         } catch (error) {
             console.error(error);
         }
@@ -128,4 +130,4 @@ const RoomJoinPage = () => {
     );
 };
 
-export default RoomJoinPage;
+export default CreateRoomPage;

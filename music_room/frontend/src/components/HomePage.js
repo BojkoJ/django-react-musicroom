@@ -6,8 +6,9 @@ import {
     Link,
     Redirect,
 } from "react-router-dom";
-import RoomJoinPage from "./RoomJoinPage";
-import RoomCreatePage from "./RoomCreatePage";
+import Room from "./Room";
+import JoinRoomPage from "./JoinRoomPage";
+import CreateRoomPage from "./CreateRoomPage";
 
 const HomePage = () => {
     return (
@@ -17,10 +18,13 @@ const HomePage = () => {
                     <p>This is the home page</p>
                 </Route>
                 <Route path='/join'>
-                    <RoomJoinPage />
+                    <JoinRoomPage />
                 </Route>
                 <Route path='/create'>
-                    <RoomCreatePage />
+                    <CreateRoomPage />
+                </Route>
+                <Route path='/room/:roomCode'>
+                    <Room />
                 </Route>
             </Switch>
         </Router>

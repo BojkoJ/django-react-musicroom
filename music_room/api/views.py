@@ -8,9 +8,38 @@ from rest_framework.response import Response
 # Create your views here.
 
 class RoomView(generics.ListAPIView):
-    # Toto view bude sloužit k vytvoření nové místnosti
     queryset = Room.objects.all() # Vrací všechny místnosti
     serializer_class = RoomSerializer # Použije RoomSerializer
+
+class GetRoom(APIView):
+    serializer_class = RoomSerializer
+    lookup_url_kwarg = 'code'
+
+    # Použijeme metodu get, kde získáme kód místnosti
+    def get(self, request, format=None):
+
+        # Získáme kód místnosti pomocí request.GET.get metody, která bere lookup_url_kwarg jako argument
+        # lookup_url_kwarg je proměnná, která obsahuje název URL parametru, který chceme získat
+        code = request.GET.get(self.lookup_url_kwarg) 
+
+        if code != None:
+            # Vyfiltrujeme místnost podle kódu
+            room = Room.objects.filter(code=code)
+            if len(room) > 0:
+                # Serialuzujeme místnost a vrátíme ji
+                data = RoomSerializer(room[0]).data
+                
+                # Do data přidáme is_host, který bude True, pokud je hostem
+                # To pokud je hostem zjistím tak, že porovnám session_key s hostem místnosti (objekt room[0])
+                data['is_host'] = self.request.session.session_key == room[0].host
+
+                return Response(data, status=status.HTTP_200_OK)
+            
+            return Response({'Room not found' : 'Invalid Room Code.'}, status=status.HTTP_404_NOT_FOUND)
+
+        return Response({'Bad Request' : 'Code parameter not found in request'}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class CreateRoomView(APIView):
     # Co nám APIView dovoluje, je to, že můžeme přepsat metody jako get, post, put, delete, atd.
