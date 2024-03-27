@@ -120,3 +120,27 @@ class UserInRoom(APIView):
 
         # JsonResponse dělá to, že vezme python dictionary a převede ho na JSON
         return JsonResponse(data, status=status.HTTP_200_OK)
+
+
+class LeaveRoom(APIView):
+    def post(self, request, format=None):
+
+        if 'room_code' in self.request.session:
+            # Pokud session obsahuje room_code, tak ho odstraníme 
+            self.request.session.pop('room_code')
+
+            # Pokud je rovněž user majitelem místnosti, smažeme ji:
+
+            # Získáme session_key
+            host_id = self.request.session.session_key
+
+            # Získáme místnost kterou má host
+            room_results = Room.objects.filter(host=host_id)
+
+            # Pokud místnost existuje, tak ji smažeme
+            if len(room_results) > 0:
+                room = room_results[0]
+                room.delete()
+
+        return Response({'Message' : 'Success'}, status=status.HTTP_200_OK)
+    

@@ -91,9 +91,20 @@ const HomePage = () => {
                 <Route path='/create'>
                     <CreateRoomPage />
                 </Route>
-                <Route path='/room/:roomCode'>
-                    <Room />
-                </Route>
+                <Route
+                    path='/room/:roomCode'
+                    render={() => {
+                        return (
+                            <Room
+                                roomCode={roomCode}
+                                leaveRoomCallback={() => {
+                                    console.log("leave room callback called");
+                                    setRoomCode(null);
+                                }}
+                            />
+                        );
+                    }}
+                />
             </Switch>
         </Router>
     );
